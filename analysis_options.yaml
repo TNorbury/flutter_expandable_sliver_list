@@ -1,0 +1,7 @@
+include: package:effective_dart/analysis_options.1.2.0.yaml
+
+linter:
+  rules:
+    constant_identifier_names: false
+    omit_local_variable_types: false
+    avoid_types_on_closure_parameters: false
