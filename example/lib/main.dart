@@ -6,7 +6,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,14 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
     20
   ];
 
-  ExpandableSliverListController _expandableSliverListController =
+  ExpandableSliverListController _controller =
       ExpandableSliverListController();
 
-  void _incrementCounter() {
-    if (_expandableSliverListController.isCollapsed()) {
-      _expandableSliverListController.expand();
+  void _toggleList() {
+    if (_controller.isCollapsed()) {
+      _controller.expand();
     } else {
-      _expandableSliverListController.collapse();
+      _controller.collapse();
     }
   }
 
@@ -73,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         slivers: [
           ExpandableSliverList<int>(
             items: _nums,
-            controller: _expandableSliverListController,
+            controller: _controller,
             // startCollapsed: true,
             duration: const Duration(seconds: 1),
             builder: (context, item) {
@@ -85,8 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _toggleList,
         child: Icon(Icons.add),
       ),
     );
