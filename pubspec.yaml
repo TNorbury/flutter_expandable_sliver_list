@@ -1,6 +1,6 @@
 name: expandable_sliver_list
 description: A sliver list that can be hidden or shown
-version: 1.0.0
+version: 1.0.0+1
 homepage: https://github.com/TNorbury/flutter_expandable_sliver_list
 repository: https://github.com/TNorbury/flutter_expandable_sliver_list
 issue_tracker: https://github.com/TNorbury/flutter_expandable_sliver_list/issues
