@@ -1,11 +1,13 @@
 name: expandable_sliver_list
 description: A sliver list that can be hidden or shown
-version: 0.0.1
-homepage:
+version: 1.0.0
+homepage: https://github.com/TNorbury/flutter_expandable_sliver_list
+repository: https://github.com/TNorbury/flutter_expandable_sliver_list
+issue_tracker: https://github.com/TNorbury/flutter_expandable_sliver_list/issues
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
+  flutter: ">=1.12.0 <2.0.0"
 
 dependencies:
   flutter:

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -59,7 +58,7 @@ void main() {
       // Press the button yet again, and wait for it to expand
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
-      
+
       // There should be 4 items
       expect(find.byType(ListTile), findsNWidgets(4));
     },
@@ -88,7 +87,6 @@ void main() {
 
       // There should be nothing
       expect(find.byType(ListTile), findsNothing);
-      
     },
   );
 }
@@ -120,7 +118,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<String> _items = ["Hello", "This", "List", "Expands"];
 
-  ExpandableSliverListController _expandableSliverListController =
+  final ExpandableSliverListController _expandableSliverListController =
       ExpandableSliverListController();
 
   void _toggleList() {
