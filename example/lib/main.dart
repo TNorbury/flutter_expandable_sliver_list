@@ -29,30 +29,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<int> _nums = [
-    0,
-    1,
-    2,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20
-  ];
+  final List<int> _nums = [0];
 
-  ExpandableSliverListController _controller =
-      ExpandableSliverListController();
+  int _num = 1;
+
+  ExpandableSliverListController<int> _controller =
+      ExpandableSliverListController<int>();
 
   void _toggleList() {
     if (_controller.isCollapsed()) {
@@ -67,14 +49,30 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              _controller.insertItem(_num, _num);
+              _num++;
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.remove),
+            onPressed: () {
+              _num--;
+              _controller.removeItem(_num);
+            },
+          ),
+        ],
       ),
       body: CustomScrollView(
         slivers: [
           ExpandableSliverList<int>(
-            items: _nums,
+            initialItems: _nums,
             controller: _controller,
             // startCollapsed: true,
-            duration: const Duration(seconds: 1),
+            duration: const Duration(milliseconds: 500),
             builder: (context, item) {
               return ListTile(
                 title: Text(item.toString()),

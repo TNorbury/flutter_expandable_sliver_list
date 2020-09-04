@@ -45,7 +45,7 @@ Create the widget
 
 ```dart
 ExpandableSliverList<int>(
-  items: items,
+  initialItems: items,
   controller: controller,
   builder: (context, item) {
     return ListTile(
@@ -60,4 +60,11 @@ Now you can use the controller to expand or collapse the list
 ```dart
 controller.collapse();
 controller.expand();
+```
+
+Or to add items to the list
+
+```dart
+controller.insertItem(54, 2);
+controller.removeItem(4);
 ```
