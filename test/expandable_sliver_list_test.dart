@@ -1,3 +1,4 @@
+// ignore_for_file: lines_longer_than_80_chars
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -10,8 +11,18 @@ void main() {
       ExpandableSliverListController expandableSliverListController =
           ExpandableSliverListController();
 
+      final GlobalKey<SliverAnimatedListState> _listKey =
+          GlobalKey<SliverAnimatedListState>();
       // start off expanded
-      expandableSliverListController.init(ExpandableSliverListStatus.expanded);
+      expandableSliverListController.init(
+        initialState: ExpandableSliverListStatus.expanded,
+        items: [],
+        listKey: _listKey,
+        builder: (BuildContext context, item) {
+          return Container();
+        },
+        duration: const Duration(milliseconds: 250),
+      );
       expect(expandableSliverListController.isCollapsed(), false);
 
       // collapse
@@ -89,6 +100,111 @@ void main() {
       expect(find.byType(ListTile), findsNothing);
     },
   );
+
+  testWidgets(
+    "items can be added and removed to the list",
+    (WidgetTester tester) async {
+      final ExpandableSliverListController<int> controller =
+          ExpandableSliverListController();
+
+      List<int> _items = [];
+      int counter = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                ExpandableSliverList<int>(
+                  initialItems: _items,
+                  controller: controller,
+                  duration: const Duration(seconds: 1),
+                  builder: (context, item) {
+                    return ListTile(
+                      title: Text(item.toString()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      // Add a few items
+      controller.insertItem(counter, counter);
+      counter++;
+      controller.insertItem(counter, counter);
+      counter++;
+      controller.insertItem(counter, counter);
+      counter++;
+      await tester.pumpAndSettle();
+      expect(find.byType(ListTile), findsNWidgets(3));
+
+      // remove one of the items
+      controller.removeItem(counter - 1);
+      await tester.pumpAndSettle();
+      expect(find.byType(ListTile), findsNWidgets(2));
+    },
+  );
+
+  testWidgets(
+    "items added or removed when the list is collapsed will be displayed when it's expanded again",
+    (WidgetTester tester) async {
+      final ExpandableSliverListController<int> controller =
+          ExpandableSliverListController();
+
+      List<int> _items = [];
+      int counter = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                ExpandableSliverList<int>(
+                  initialItems: _items,
+                  controller: controller,
+                  startCollapsed: true,
+                  builder: (context, item) {
+                    return ListTile(
+                      title: Text(item.toString()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      // add some items and expand, they should be present
+      controller.insertItem(counter, counter);
+      counter++;
+      await tester.pumpAndSettle();
+      controller.insertItem(counter, counter);
+      counter++;
+      await tester.pumpAndSettle();
+
+      controller.expand();
+      await tester.pumpAndSettle(const Duration(milliseconds: 500));
+      expect(find.byType(ListTile), findsNWidgets(2));
+
+      controller.insertItem(counter, counter);
+      counter++;
+
+      // collapse, and remove an item, expand again, it should be present
+      controller.collapse();
+      await tester.pumpAndSettle(const Duration(milliseconds: 500));
+      controller.removeItem(1);
+
+      controller.expand();
+      await tester.pumpAndSettle(const Duration(milliseconds: 500));
+      expect(find.byType(ListTile), findsNWidgets(2));
+      expect(find.text("0"), findsOneWidget);
+      expect(find.text("2"), findsOneWidget);
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -118,7 +234,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<String> _items = ["Hello", "This", "List", "Expands"];
 
-  final ExpandableSliverListController _expandableSliverListController =
+  final ExpandableSliverListController<String> _expandableSliverListController =
       ExpandableSliverListController();
 
   void _toggleList() {
@@ -135,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: CustomScrollView(
         slivers: [
           ExpandableSliverList<String>(
-            items: _items,
+            initialItems: _items,
             startCollapsed: widget.startCollapsed,
             controller: _expandableSliverListController,
             duration: const Duration(seconds: 1),
