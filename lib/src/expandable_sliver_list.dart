@@ -5,7 +5,9 @@ import 'expandable_sliver_list_controller.dart';
 /// A [SliverList] that can be used to hide the contents of the list, and expand
 /// to show them again.
 class ExpandableSliverList<T> extends StatefulWidget {
-  /// The initial list of items that'll be displayed in this list
+  /// The initial list of items that'll be displayed in this list. This list 
+  /// will be copied and used to keep track of the items that the animated list
+  /// should be displaying.
   final List<T> initialItems;
 
   /// Builder function that will be called on every item
@@ -24,12 +26,13 @@ class ExpandableSliverList<T> extends StatefulWidget {
   /// items, build, and controller must be provided
   ExpandableSliverList({
     Key key,
-    @required this.initialItems,
+    @required Iterable<T> initialItems,
     @required this.builder,
     @required this.controller,
     this.startCollapsed = false,
     this.duration = const Duration(milliseconds: 500),
-  }) : super(key: key);
+  })  : initialItems = List<T>.from(initialItems ?? []),
+        super(key: key);
 
   @override
   _ExpandableSliverListState<T> createState() =>
