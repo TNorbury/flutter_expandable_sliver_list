@@ -205,6 +205,50 @@ void main() {
       expect(find.text("2"), findsOneWidget);
     },
   );
+
+  test(
+    "Verify asserts work on controller",
+    () {
+      final ExpandableSliverListController<int> controller =
+          ExpandableSliverListController();
+
+      // Throw an exception when the following aren't passed:
+      // initial state
+      expect(() => controller.init(), throwsAssertionError);
+
+      // items
+      expect(
+          () => controller.init(
+              initialState: ExpandableSliverListStatus.collapsed),
+          throwsAssertionError);
+
+      // listKey
+      expect(
+          () => controller.init(
+              initialState: ExpandableSliverListStatus.collapsed, items: []),
+          throwsAssertionError);
+
+      // builder
+      GlobalKey<SliverAnimatedListState> listKey =
+          GlobalKey<SliverAnimatedListState>();
+      expect(
+          () => controller.init(
+              initialState: ExpandableSliverListStatus.collapsed,
+              items: [],
+              listKey: listKey),
+          throwsAssertionError);
+
+      //duration
+      expect(
+          () => controller.init(
+                initialState: ExpandableSliverListStatus.collapsed,
+                items: [],
+                listKey: listKey,
+                builder: (context, item) => Container(),
+              ),
+          throwsAssertionError);
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
