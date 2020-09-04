@@ -249,6 +249,17 @@ void main() {
           throwsAssertionError);
     },
   );
+
+  test(
+    "disposing the controller works and prevents new listeners from being added",
+    () {
+      final ExpandableSliverListController<int> controller =
+          ExpandableSliverListController();
+
+      controller.dispose();
+      expect(() => controller.addListener(() {}), throwsFlutterError);
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
