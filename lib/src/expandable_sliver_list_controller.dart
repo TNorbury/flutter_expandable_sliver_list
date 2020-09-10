@@ -111,7 +111,7 @@ class ExpandableSliverListController<T>
 
     if (!isCollapsed()) {
       _numItemsDisplayed++;
-      _listKey.currentState.insertItem(
+      _listKey.currentState?.insertItem(
         index,
         duration: _itemPeriod,
       );
@@ -128,7 +128,7 @@ class ExpandableSliverListController<T>
 
     if (!isCollapsed()) {
       _numItemsDisplayed--;
-      _listKey.currentState.removeItem(
+      _listKey.currentState?.removeItem(
         index,
         (context, animation) => SizeTransition(
           sizeFactor: animation,
