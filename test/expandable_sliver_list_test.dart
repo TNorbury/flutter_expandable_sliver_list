@@ -223,6 +223,7 @@ void main() {
                   initialItems: _items,
                   controller: controller,
                   duration: const Duration(seconds: 1),
+                  startCollapsed: true,
                   expandOnInitialInsertion: true,
                   builder: (context, item) {
                     return ListTile(
@@ -237,7 +238,7 @@ void main() {
       );
 
       controller.insertItem(0, 0);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byType(ListTile), findsNWidgets(1));
     },
   );
