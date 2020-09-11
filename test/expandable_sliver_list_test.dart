@@ -206,6 +206,42 @@ void main() {
     },
   );
 
+  testWidgets(
+    "expand on initial insertion",
+    (WidgetTester tester) async {
+      final ExpandableSliverListController<int> controller =
+          ExpandableSliverListController();
+
+      List<int> _items = [];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                ExpandableSliverList<int>(
+                  initialItems: _items,
+                  controller: controller,
+                  duration: const Duration(seconds: 1),
+                  expandOnInitialInsertion: true,
+                  builder: (context, item) {
+                    return ListTile(
+                      title: Text(item.toString()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      controller.insertItem(0, 0);
+      await tester.pumpAndSettle();
+      expect(find.byType(ListTile), findsNWidgets(1));
+    },
+  );
+
   test(
     "Verify asserts work on controller",
     () {

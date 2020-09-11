@@ -23,6 +23,9 @@ class ExpandableSliverList<T> extends StatefulWidget {
   /// How long it should take for the entire list to expand or collapse
   final Duration duration;
 
+  /// When the first item is inserted into this list, should it expand?
+  final bool expandOnInitialInsertion;
+
   /// items, build, and controller must be provided
   ExpandableSliverList({
     Key key,
@@ -31,6 +34,7 @@ class ExpandableSliverList<T> extends StatefulWidget {
     @required this.controller,
     this.startCollapsed = false,
     this.duration = const Duration(milliseconds: 500),
+    this.expandOnInitialInsertion = false,
   })  : initialItems = List<T>.from(initialItems ?? []),
         super(key: key);
 

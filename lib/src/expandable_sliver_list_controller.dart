@@ -29,6 +29,7 @@ class ExpandableSliverListController<T>
   Widget Function(BuildContext context, T item) _builder;
 
   Duration _duration;
+  bool _expandOnInitialInsertion;
 
   /// Controller that'll be used to switch the list between collapsed and
   /// expanded
@@ -41,6 +42,7 @@ class ExpandableSliverListController<T>
     @required GlobalKey<SliverAnimatedListState> listKey,
     @required Widget Function(BuildContext context, T item) builder,
     @required Duration duration,
+    bool expandOnInitialInsertion = false,
   }) {
     assert(initialState != null);
     assert(items != null);
@@ -53,6 +55,7 @@ class ExpandableSliverListController<T>
     _listKey = listKey;
     _builder = builder;
     _duration = duration;
+    _expandOnInitialInsertion = expandOnInitialInsertion;
 
     _numItemsDisplayed =
         value == ExpandableSliverListStatus.collapsed ? 0 : _items.length;
@@ -109,7 +112,11 @@ class ExpandableSliverListController<T>
 
     _calcItemPeriod();
 
-    if (!isCollapsed()) {
+    // If this is the first item and we're expanding on initial insertion,
+    // we'll expand
+    if (_expandOnInitialInsertion && _items.length == 1) {
+      expand();
+    } else if (!isCollapsed()) {
       _numItemsDisplayed++;
       _listKey.currentState?.insertItem(
         index,
