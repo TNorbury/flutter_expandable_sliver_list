@@ -297,6 +297,75 @@ void main() {
       expect(() => controller.addListener(() {}), throwsFlutterError);
     },
   );
+
+  testWidgets(
+    "insertItems allows multiple items to be added",
+    (WidgetTester tester) async {
+      final ExpandableSliverListController<int> controller =
+          ExpandableSliverListController();
+
+      List<int> _items = [];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                ExpandableSliverList<int>(
+                  initialItems: _items,
+                  controller: controller,
+                  duration: const Duration(milliseconds: 250),
+                  builder: (context, item) {
+                    return ListTile(
+                      title: Text(item.toString()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      controller.insertItems([1, 2, 3], [0, 1, 2]);
+      await tester.pumpAndSettle(Duration(milliseconds: 251));
+      expect(find.byType(ListTile), findsNWidgets(3));
+    },
+  );
+
+  testWidgets(
+    "using insertItems with an invalid index will throw an exception",
+    (WidgetTester tester) async {
+      final ExpandableSliverListController<int> controller =
+          ExpandableSliverListController();
+
+      List<int> _items = [];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                ExpandableSliverList<int>(
+                  initialItems: _items,
+                  controller: controller,
+                  duration: const Duration(milliseconds: 250),
+                  builder: (context, item) {
+                    return ListTile(
+                      title: Text(item.toString()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(
+          () => controller.insertItems([1, 2, 3], [0, 4, 1]), throwsException);
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {

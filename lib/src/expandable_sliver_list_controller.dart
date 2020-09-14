@@ -120,9 +120,67 @@ class ExpandableSliverListController<T>
       _numItemsDisplayed++;
       _listKey.currentState?.insertItem(
         index,
-        duration: _itemPeriod,
+        duration: _duration,
       );
     }
+  }
+
+  /// Inserts the given items into the given indices.
+  ///
+  /// [items] and [indices] should have the same number of items
+  ///
+  /// All values in [indices] should be valid, which is to say that a given
+  /// index shouldn't exceed the the number of items when all but 1 have been
+  /// inserted. This method assumes that both lists are ordered in the way that
+  /// you want the items to be inserted
+  void insertItems(List<T> items, List<int> indices) {
+    assert(items.length == indices.length);
+
+    // validates the indices
+    int maxNumItems = _items.length + indices.length;
+    for (int index in indices) {
+      if (index > maxNumItems) {
+        throw Exception(
+          "Index $index is invalid and can't be inserted into the list",
+        );
+      }
+    }
+
+    // If this is our initial insertion, and we're expanding on that, then we'll
+    // put ourselves into the expanded state
+    if (_expandOnInitialInsertion && _items.length == 0) {
+      value = ExpandableSliverListStatus.expanded;
+    }
+
+    _timer?.cancel();
+
+    Duration period = Duration(milliseconds: (250 / items.length).round());
+
+    _timer = Timer.periodic(
+      period,
+      (timer) {
+        if (items.length != 0 && indices.length != 0) {
+          T item = items.removeAt(0);
+          int index = indices.removeAt(0);
+
+          // Otherwise, we'll insert it into our collection, and if we're not
+          // collapsed, also animate it in
+          _items.insert(index, item);
+
+          if (!isCollapsed()) {
+            _listKey.currentState.insertItem(index, duration: period);
+            _numItemsDisplayed++;
+          }
+        }
+
+        // Once we run out of items to add, we'll stop the timer and recalculate
+        // our item period
+        else {
+          timer.cancel();
+          _calcItemPeriod();
+        }
+      },
+    );
   }
 
   /// Remove the item at the given index
@@ -141,7 +199,7 @@ class ExpandableSliverListController<T>
           sizeFactor: animation,
           child: _builder(context, item),
         ),
-        duration: _itemPeriod,
+        duration: _duration,
       );
     }
   }
@@ -158,6 +216,7 @@ class ExpandableSliverListController<T>
         if (_numItemsDisplayed < _items.length) {
           _listKey.currentState.insertItem(
             _numItemsDisplayed++,
+            duration: _itemPeriod,
           );
         }
 
@@ -184,6 +243,7 @@ class ExpandableSliverListController<T>
                 child: _builder(context, item),
               );
             },
+            duration: _itemPeriod,
           );
         } else {
           timer.cancel();
