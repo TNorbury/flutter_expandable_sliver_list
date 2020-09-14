@@ -47,7 +47,7 @@ Create the widget
 ExpandableSliverList<int>(
   initialItems: items,
   controller: controller,
-  builder: (context, item) {
+  builder: (context, item, index) {
     return ListTile(
       title: Text(item.toString()),
     );

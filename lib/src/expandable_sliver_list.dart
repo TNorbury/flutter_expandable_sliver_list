@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'expandable_sliver_list_controller.dart';
 
+typedef ExpandableItemBuilder<T> = Widget Function(
+    BuildContext context, T item, int index);
+
 /// A [SliverList] that can be used to hide the contents of the list, and expand
 /// to show them again.
 class ExpandableSliverList<T> extends StatefulWidget {
@@ -11,7 +14,7 @@ class ExpandableSliverList<T> extends StatefulWidget {
   final List<T> initialItems;
 
   /// Builder function that will be called on every item
-  final Widget Function(BuildContext context, T item) builder;
+  final ExpandableItemBuilder<T> builder;
 
   /// If set to true, this list will start collapsed, and will need to be
   /// expanded before any of the contents can be shown.
@@ -84,7 +87,7 @@ class _ExpandableSliverListState<T> extends State<ExpandableSliverList<T>> {
         var item = widget.initialItems[index];
         return SizeTransition(
           sizeFactor: animation,
-          child: widget.builder(context, item),
+          child: widget.builder(context, item, index),
         );
       },
     );

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'expandable_sliver_list.dart';
+
 /// The status of the expandable list
 enum ExpandableSliverListStatus {
   /// The list is expanded. Items are visible.
@@ -26,7 +28,7 @@ class ExpandableSliverListController<T>
   /// The period between each item being added/removed (visually) from the list
   Duration _itemPeriod;
 
-  Widget Function(BuildContext context, T item) _builder;
+  ExpandableItemBuilder<T> _builder;
 
   Duration _duration;
   bool _expandOnInitialInsertion;
@@ -40,7 +42,7 @@ class ExpandableSliverListController<T>
     @required ExpandableSliverListStatus initialState,
     @required List<T> items,
     @required GlobalKey<SliverAnimatedListState> listKey,
-    @required Widget Function(BuildContext context, T item) builder,
+    @required ExpandableItemBuilder<T> builder,
     @required Duration duration,
     bool expandOnInitialInsertion = false,
   }) {
@@ -197,7 +199,7 @@ class ExpandableSliverListController<T>
         index,
         (context, animation) => SizeTransition(
           sizeFactor: animation,
-          child: _builder(context, item),
+          child: _builder(context, item, index),
         ),
         duration: _duration,
       );
@@ -233,14 +235,15 @@ class ExpandableSliverListController<T>
       _itemPeriod,
       (timer) {
         if (_numItemsDisplayed >= 1) {
-          T item = _items[_numItemsDisplayed - 1];
+          _numItemsDisplayed -= 1;
+          T item = _items[_numItemsDisplayed];
 
           _listKey.currentState.removeItem(
-            --_numItemsDisplayed,
+            _numItemsDisplayed,
             (context, animation) {
               return SizeTransition(
                 sizeFactor: animation,
-                child: _builder(context, item),
+                child: _builder(context, item, _numItemsDisplayed),
               );
             },
             duration: _itemPeriod,

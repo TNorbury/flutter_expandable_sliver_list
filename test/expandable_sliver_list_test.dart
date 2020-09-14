@@ -18,7 +18,7 @@ void main() {
         initialState: ExpandableSliverListStatus.expanded,
         items: [],
         listKey: _listKey,
-        builder: (BuildContext context, item) {
+        builder: (BuildContext context, item, index) {
           return Container();
         },
         duration: const Duration(milliseconds: 250),
@@ -119,7 +119,7 @@ void main() {
                   initialItems: _items,
                   controller: controller,
                   duration: const Duration(seconds: 1),
-                  builder: (context, item) {
+                  builder: (context, item, index) {
                     return ListTile(
                       title: Text(item.toString()),
                     );
@@ -166,7 +166,7 @@ void main() {
                   initialItems: _items,
                   controller: controller,
                   startCollapsed: true,
-                  builder: (context, item) {
+                  builder: (context, item, index) {
                     return ListTile(
                       title: Text(item.toString()),
                     );
@@ -225,7 +225,7 @@ void main() {
                   duration: const Duration(seconds: 1),
                   startCollapsed: true,
                   expandOnInitialInsertion: true,
-                  builder: (context, item) {
+                  builder: (context, item, index) {
                     return ListTile(
                       title: Text(item.toString()),
                     );
@@ -281,7 +281,7 @@ void main() {
                 initialState: ExpandableSliverListStatus.collapsed,
                 items: [],
                 listKey: listKey,
-                builder: (context, item) => Container(),
+                builder: (context, item, index) => Container(),
               ),
           throwsAssertionError);
     },
@@ -315,7 +315,7 @@ void main() {
                   initialItems: _items,
                   controller: controller,
                   duration: const Duration(milliseconds: 250),
-                  builder: (context, item) {
+                  builder: (context, item, index) {
                     return ListTile(
                       title: Text(item.toString()),
                     );
@@ -350,7 +350,7 @@ void main() {
                   initialItems: _items,
                   controller: controller,
                   duration: const Duration(milliseconds: 250),
-                  builder: (context, item) {
+                  builder: (context, item, index) {
                     return ListTile(
                       title: Text(item.toString()),
                     );
@@ -416,7 +416,7 @@ class _MyHomePageState extends State<MyHomePage> {
             startCollapsed: widget.startCollapsed,
             controller: _expandableSliverListController,
             duration: const Duration(seconds: 1),
-            builder: (context, item) {
+            builder: (context, item, index) {
               return ListTile(
                 title: Text(item),
               );

@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
             controller: _controller,
             // startCollapsed: true,
             duration: const Duration(milliseconds: 500),
-            builder: (context, item) {
+            builder: (context, item, index) {
               return ListTile(
                 title: Text(item.toString()),
               );
