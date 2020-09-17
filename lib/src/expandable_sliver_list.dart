@@ -84,11 +84,20 @@ class _ExpandableSliverListState<T> extends State<ExpandableSliverList<T>> {
         int index,
         Animation<double> animation,
       ) {
-        var item = widget.initialItems[index];
-        return SizeTransition(
-          sizeFactor: animation,
-          child: widget.builder(context, item, index),
-        );
+        // In the event that the index is out of range for some reason, we'll
+        // make a simple container
+        if (index >= widget.initialItems.length) {
+          return Container();
+        }
+
+        // Otherwise, we'll build what we're supposed to
+        else {
+          var item = widget.initialItems[index];
+          return SizeTransition(
+            sizeFactor: animation,
+            child: widget.builder(context, item, index),
+          );
+        }
       },
     );
   }
