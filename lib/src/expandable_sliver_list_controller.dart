@@ -129,10 +129,12 @@ class ExpandableSliverListController<T>
     _calcItemPeriod();
 
     // If this is the first item and we're expanding on initial insertion,
-    // we'll expand
-    if (_expandOnInitialInsertion && _items.length == 1) {
-      expand();
-    } else if (!isCollapsed()) {
+    // we'll set our status to expanded
+    if (_expandOnInitialInsertion && _items.length == 1 && isCollapsed()) {
+      value = ExpandableSliverListStatus.expanded;
+    }
+
+    if (!isCollapsed()) {
       _numItemsDisplayed++;
       _listKey.currentState?.insertItem(
         index,
