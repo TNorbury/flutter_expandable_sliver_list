@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<int> _nums = [0];
+  List<int> _nums = [0];
 
   int _num = 1;
 
@@ -46,6 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _controller.setItems(_nums);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -53,17 +55,34 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              _controller.insertItem(_num, _num);
-              _num++;
+              setState(() {
+                _controller.insertItem(_num, _num);
+                _nums.insert(_num, _num);
+
+                _num++;
+              });
             },
           ),
           IconButton(
             icon: Icon(Icons.remove),
             onPressed: () {
-              _num--;
-              _controller.removeItem(_num);
+              setState(() {
+                _num--;
+
+                _nums.removeAt(_num);
+                _controller.removeItem(_num);
+              });
             },
           ),
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {
+                _nums = [0, 1, 2, 3];
+                _num = 4;
+              });
+            },
+          )
         ],
       ),
       body: CustomScrollView(
@@ -71,7 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ExpandableSliverList<int>(
             initialItems: _nums,
             controller: _controller,
-            // startCollapsed: true,
             duration: const Duration(milliseconds: 500),
             builder: (context, item, index) {
               return ListTile(

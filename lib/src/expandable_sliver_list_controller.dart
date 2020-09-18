@@ -33,6 +33,8 @@ class ExpandableSliverListController<T>
   Duration _duration = kDefaultDuration;
   bool _expandOnInitialInsertion;
 
+  bool _initialized = false;
+
   /// Controller that'll be used to switch the list between collapsed and
   /// expanded
   ExpandableSliverListController() : super(null);
@@ -63,6 +65,8 @@ class ExpandableSliverListController<T>
         value == ExpandableSliverListStatus.collapsed ? 0 : _items.length;
 
     _calcItemPeriod();
+
+    _initialized = true;
   }
 
   @override
@@ -93,9 +97,41 @@ class ExpandableSliverListController<T>
     // If there is a timer of some sort being used right now, either for
     // expanding/collapsing, or when multiple items are being added, we won't
     // set the items, as that could mess up what the timer is trying to
-    // accomplish
-    if (!(_timer?.isActive ?? false)) {
+    // accomplish.
+    // This will also only perform if the controller has been initialized.
+    if (!(_timer?.isActive ?? false) && _initialized) {
+      int numItemsDifference = _items.length - items.length;
+
       _items = List.from(items);
+
+      // if the list is currently expanded, then we'll need to update the list's
+      // state
+      if (!isCollapsed()) {
+        // if the difference is negative, then we'll need to insert that many
+        // items into the list state
+        if (numItemsDifference < 0) {
+          int numItemsToAdd = -1 * numItemsDifference;
+          for (int i = 0; i < numItemsToAdd; i++) {
+            // index doesn't matter, as we just want the state's internal list
+            // count to change
+            _listKey.currentState
+                ?.insertItem(0, duration: Duration(seconds: 0));
+          }
+        }
+
+        // otherwise, if positive, we'll need to remove items
+        else if (numItemsDifference > 0) {
+          for (int i = 0; i < numItemsDifference; i++) {
+            // index doesn't matter, as we just want the state's internal list
+            // count to change
+            _listKey.currentState?.removeItem(
+              0,
+              (context, animation) => Container(),
+              duration: Duration(seconds: 0),
+            );
+          }
+        }
+      }
 
       _numItemsDisplayed =
           value == ExpandableSliverListStatus.collapsed ? 0 : _items.length;

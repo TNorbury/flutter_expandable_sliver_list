@@ -371,10 +371,15 @@ void main() {
       () {
         ExpandableSliverListController<int> controller =
             ExpandableSliverListController<int>();
-        controller.value = ExpandableSliverListStatus.expanded;
 
-        // Hasn't been initialized yet.
-        expect(controller.numItemsDisplayed(), null);
+        controller.init(
+            initialState: ExpandableSliverListStatus.expanded,
+            items: [],
+            listKey: GlobalKey<SliverAnimatedListState>(),
+            builder: (a, b, c) => Container(),
+            duration: Duration(seconds: 0));
+
+        expect(controller.numItemsDisplayed(), 0);
 
         // when expanded, setting a list of 3 will display 3 items
         controller.setItems([1, 2, 3]);
