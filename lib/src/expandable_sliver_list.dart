@@ -5,6 +5,9 @@ import 'expandable_sliver_list_controller.dart';
 typedef ExpandableItemBuilder<T> = Widget Function(
     BuildContext context, T item, int index);
 
+/// Default duration for expanding/collapsing animation
+const Duration kDefaultDuration = Duration(milliseconds: 500);
+
 /// A [SliverList] that can be used to hide the contents of the list, and expand
 /// to show them again.
 class ExpandableSliverList<T> extends StatefulWidget {
@@ -36,7 +39,7 @@ class ExpandableSliverList<T> extends StatefulWidget {
     @required this.builder,
     @required this.controller,
     this.startCollapsed = false,
-    this.duration = const Duration(milliseconds: 500),
+    this.duration = kDefaultDuration,
     this.expandOnInitialInsertion = false,
   })  : initialItems = List<T>.from(initialItems ?? []),
         super(key: key);

@@ -30,7 +30,7 @@ class ExpandableSliverListController<T>
 
   ExpandableItemBuilder<T> _builder;
 
-  Duration _duration;
+  Duration _duration = kDefaultDuration;
   bool _expandOnInitialInsertion;
 
   /// Controller that'll be used to switch the list between collapsed and
@@ -82,6 +82,20 @@ class ExpandableSliverListController<T>
     else {
       _itemPeriod = _duration;
     }
+  }
+
+  /// Sets the items in this collection.
+  ///
+  /// Useful for when the this controller's items are supposed to be mirroring
+  /// another collection, but that other collection was changed in a way that
+  /// insert/remove couldn't be called.
+  void setItems(List<T> items) {
+    _items = items;
+
+    _numItemsDisplayed =
+        value == ExpandableSliverListStatus.collapsed ? 0 : _items.length;
+
+    _calcItemPeriod();
   }
 
   /// Collapse the list this controller is connected to

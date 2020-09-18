@@ -5,50 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:expandable_sliver_list/expandable_sliver_list.dart';
 
 void main() {
-  test(
-    "expandable sliver list controller works",
-    () {
-      ExpandableSliverListController expandableSliverListController =
-          ExpandableSliverListController();
-
-      final GlobalKey<SliverAnimatedListState> _listKey =
-          GlobalKey<SliverAnimatedListState>();
-      // start off expanded
-      expandableSliverListController.init(
-        initialState: ExpandableSliverListStatus.expanded,
-        items: [],
-        listKey: _listKey,
-        builder: (BuildContext context, item, index) {
-          return Container();
-        },
-        duration: const Duration(milliseconds: 250),
-      );
-      expect(expandableSliverListController.isCollapsed(), false);
-
-      // collapse
-      expandableSliverListController.collapse();
-      expect(expandableSliverListController.isCollapsed(), true);
-
-      // expand
-      expandableSliverListController.expand();
-      expect(expandableSliverListController.isCollapsed(), false);
-
-      // listener works
-      bool listenerCalled = false;
-      expandableSliverListController.addListener(() {
-        listenerCalled = true;
-      });
-
-      // already expanded, won't call listener
-      expandableSliverListController.expand();
-      expect(listenerCalled, false);
-
-      // collapsing will call listener
-      expandableSliverListController.collapse();
-      expect(listenerCalled, true);
-    },
-  );
-
   testWidgets(
     "sliver list will expand and collapse, when not starting collapsed",
     (WidgetTester tester) async {
@@ -243,61 +199,6 @@ void main() {
     },
   );
 
-  test(
-    "Verify asserts work on controller",
-    () {
-      final ExpandableSliverListController<int> controller =
-          ExpandableSliverListController();
-
-      // Throw an exception when the following aren't passed:
-      // initial state
-      expect(() => controller.init(), throwsAssertionError);
-
-      // items
-      expect(
-          () => controller.init(
-              initialState: ExpandableSliverListStatus.collapsed),
-          throwsAssertionError);
-
-      // listKey
-      expect(
-          () => controller.init(
-              initialState: ExpandableSliverListStatus.collapsed, items: []),
-          throwsAssertionError);
-
-      // builder
-      GlobalKey<SliverAnimatedListState> listKey =
-          GlobalKey<SliverAnimatedListState>();
-      expect(
-          () => controller.init(
-              initialState: ExpandableSliverListStatus.collapsed,
-              items: [],
-              listKey: listKey),
-          throwsAssertionError);
-
-      //duration
-      expect(
-          () => controller.init(
-                initialState: ExpandableSliverListStatus.collapsed,
-                items: [],
-                listKey: listKey,
-                builder: (context, item, index) => Container(),
-              ),
-          throwsAssertionError);
-    },
-  );
-
-  test(
-    "disposing the controller works and prevents new listeners from being added",
-    () {
-      final ExpandableSliverListController<int> controller =
-          ExpandableSliverListController();
-
-      controller.dispose();
-      expect(() => controller.addListener(() {}), throwsFlutterError);
-    },
-  );
-
   testWidgets(
     "insertItems allows multiple items to be added",
     (WidgetTester tester) async {
@@ -366,6 +267,127 @@ void main() {
           () => controller.insertItems([1, 2, 3], [0, 4, 1]), throwsException);
     },
   );
+
+  group("controller tests", () {
+    test(
+      "expandable sliver list controller works",
+      () {
+        ExpandableSliverListController expandableSliverListController =
+            ExpandableSliverListController();
+
+        final GlobalKey<SliverAnimatedListState> _listKey =
+            GlobalKey<SliverAnimatedListState>();
+        // start off expanded
+        expandableSliverListController.init(
+          initialState: ExpandableSliverListStatus.expanded,
+          items: [],
+          listKey: _listKey,
+          builder: (BuildContext context, item, index) {
+            return Container();
+          },
+          duration: const Duration(milliseconds: 250),
+        );
+        expect(expandableSliverListController.isCollapsed(), false);
+
+        // collapse
+        expandableSliverListController.collapse();
+        expect(expandableSliverListController.isCollapsed(), true);
+
+        // expand
+        expandableSliverListController.expand();
+        expect(expandableSliverListController.isCollapsed(), false);
+
+        // listener works
+        bool listenerCalled = false;
+        expandableSliverListController.addListener(() {
+          listenerCalled = true;
+        });
+
+        // already expanded, won't call listener
+        expandableSliverListController.expand();
+        expect(listenerCalled, false);
+
+        // collapsing will call listener
+        expandableSliverListController.collapse();
+        expect(listenerCalled, true);
+      },
+    );
+
+    test(
+      "Verify asserts work on controller",
+      () {
+        final ExpandableSliverListController<int> controller =
+            ExpandableSliverListController();
+
+        // Throw an exception when the following aren't passed:
+        // initial state
+        expect(() => controller.init(), throwsAssertionError);
+
+        // items
+        expect(
+            () => controller.init(
+                initialState: ExpandableSliverListStatus.collapsed),
+            throwsAssertionError);
+
+        // listKey
+        expect(
+            () => controller.init(
+                initialState: ExpandableSliverListStatus.collapsed, items: []),
+            throwsAssertionError);
+
+        // builder
+        GlobalKey<SliverAnimatedListState> listKey =
+            GlobalKey<SliverAnimatedListState>();
+        expect(
+            () => controller.init(
+                initialState: ExpandableSliverListStatus.collapsed,
+                items: [],
+                listKey: listKey),
+            throwsAssertionError);
+
+        //duration
+        expect(
+            () => controller.init(
+                  initialState: ExpandableSliverListStatus.collapsed,
+                  items: [],
+                  listKey: listKey,
+                  builder: (context, item, index) => Container(),
+                ),
+            throwsAssertionError);
+      },
+    );
+    test(
+      "disposing the controller works and prevents new listeners from being added",
+      () {
+        final ExpandableSliverListController<int> controller =
+            ExpandableSliverListController();
+
+        controller.dispose();
+        expect(() => controller.addListener(() {}), throwsFlutterError);
+      },
+    );
+    test(
+      "set items in controller",
+      () {
+        ExpandableSliverListController<int> controller =
+            ExpandableSliverListController<int>();
+        controller.value = ExpandableSliverListStatus.expanded;
+
+        // Hasn't been initialized yet.
+        expect(controller.numItemsDisplayed(), null);
+
+        // when expanded, setting a list of 3 will display 3 items
+        controller.setItems([1, 2, 3]);
+        expect(controller.numItemsDisplayed(), 3);
+
+        controller.value = ExpandableSliverListStatus.collapsed;
+
+        // when collapsed, setting any size list will still display 0 items
+        controller.setItems([1, 2, 3, 4, 5, 6]);
+        expect(controller.numItemsDisplayed(), 0);
+      },
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
