@@ -90,12 +90,18 @@ class ExpandableSliverListController<T>
   /// another collection, but that other collection was changed in a way that
   /// insert/remove couldn't be called.
   void setItems(List<T> items) {
-    _items = items;
+    // If there is a timer of some sort being used right now, either for
+    // expanding/collapsing, or when multiple items are being added, we won't
+    // set the items, as that could mess up what the timer is trying to
+    // accomplish
+    if (!(_timer?.isActive ?? false)) {
+      _items = List.from(items);
 
-    _numItemsDisplayed =
-        value == ExpandableSliverListStatus.collapsed ? 0 : _items.length;
+      _numItemsDisplayed =
+          value == ExpandableSliverListStatus.collapsed ? 0 : _items.length;
 
-    _calcItemPeriod();
+      _calcItemPeriod();
+    }
   }
 
   /// Collapse the list this controller is connected to
@@ -130,7 +136,7 @@ class ExpandableSliverListController<T>
 
     // If this is the first item and we're expanding on initial insertion,
     // we'll set our status to expanded
-    if (_expandOnInitialInsertion && _items.length == 1 && isCollapsed()) {
+    if (_expandOnInitialInsertion && _items.length == 1) {
       value = ExpandableSliverListStatus.expanded;
     }
 
