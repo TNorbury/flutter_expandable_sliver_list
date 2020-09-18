@@ -19,7 +19,7 @@ In your Flutter project, add the package to your dependencies
 ```yml
 dependencies:
   ...
-  expandable_sliver_list: ^2.1.1
+  expandable_sliver_list: ^3.0.0
 ```
 
 ### Usage Example
