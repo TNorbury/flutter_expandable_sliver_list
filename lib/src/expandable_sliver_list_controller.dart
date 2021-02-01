@@ -16,47 +16,42 @@ enum ExpandableSliverListStatus {
 /// Controller that'll be used to switch the list between collapsed and expanded
 class ExpandableSliverListController<T>
     extends ValueNotifier<ExpandableSliverListStatus> {
-  List<T> _items;
+  List<T> _items = [];
 
-  GlobalKey<SliverAnimatedListState> _listKey;
+  /// List key that is given to the sliver animated list used under the covers
+  GlobalKey<SliverAnimatedListState> listKey =
+      GlobalKey<SliverAnimatedListState>();
 
-  Timer _timer;
+  Timer? _timer;
 
   /// The number of items that're currently displayed by the list
-  int _numItemsDisplayed;
+  int _numItemsDisplayed = 0;
 
   /// The period between each item being added/removed (visually) from the list
-  Duration _itemPeriod;
+  Duration _itemPeriod = Duration();
 
-  ExpandableItemBuilder<T> _builder;
+  ExpandableItemBuilder<T>? _builder;
 
   Duration _duration = kDefaultDuration;
-  bool _expandOnInitialInsertion;
+  bool _expandOnInitialInsertion = false;
 
   bool _initialized = false;
 
   /// Controller that'll be used to switch the list between collapsed and
   /// expanded
-  ExpandableSliverListController() : super(null);
+  ExpandableSliverListController()
+      : super(ExpandableSliverListStatus.collapsed);
 
   /// Initializer to be called by the expandable list this is assigned to
   void init({
-    @required ExpandableSliverListStatus initialState,
-    @required List<T> items,
-    @required GlobalKey<SliverAnimatedListState> listKey,
-    @required ExpandableItemBuilder<T> builder,
-    @required Duration duration,
+    required ExpandableSliverListStatus initialState,
+    required List<T> items,
+    required ExpandableItemBuilder<T> builder,
+    required Duration duration,
     bool expandOnInitialInsertion = false,
   }) {
-    assert(initialState != null);
-    assert(items != null);
-    assert(listKey != null);
-    assert(builder != null);
-    assert(duration != null);
-
     value = initialState;
     _items = items;
-    _listKey = listKey;
     _builder = builder;
     _duration = duration;
     _expandOnInitialInsertion = expandOnInitialInsertion;
@@ -114,8 +109,7 @@ class ExpandableSliverListController<T>
           for (int i = 0; i < numItemsToAdd; i++) {
             // index doesn't matter, as we just want the state's internal list
             // count to change
-            _listKey.currentState
-                ?.insertItem(0, duration: Duration(seconds: 0));
+            listKey.currentState?.insertItem(0, duration: Duration(seconds: 0));
           }
         }
 
@@ -124,7 +118,7 @@ class ExpandableSliverListController<T>
           for (int i = 0; i < numItemsDifference; i++) {
             // index doesn't matter, as we just want the state's internal list
             // count to change
-            _listKey.currentState?.removeItem(
+            listKey.currentState?.removeItem(
               0,
               (context, animation) => Container(),
               duration: Duration(seconds: 0),
@@ -178,7 +172,7 @@ class ExpandableSliverListController<T>
 
     if (!isCollapsed()) {
       _numItemsDisplayed++;
-      _listKey.currentState?.insertItem(
+      listKey.currentState?.insertItem(
         index,
         duration: _duration,
       );
@@ -228,7 +222,7 @@ class ExpandableSliverListController<T>
           _items.insert(index, item);
 
           if (!isCollapsed()) {
-            _listKey.currentState.insertItem(index, duration: period);
+            listKey.currentState?.insertItem(index, duration: period);
             _numItemsDisplayed++;
           }
         }
@@ -253,11 +247,11 @@ class ExpandableSliverListController<T>
 
     if (!isCollapsed()) {
       _numItemsDisplayed--;
-      _listKey.currentState?.removeItem(
+      listKey.currentState?.removeItem(
         index,
         (context, animation) => SizeTransition(
           sizeFactor: animation,
-          child: _builder(context, item, index),
+          child: _builder?.call(context, item, index),
         ),
         duration: _duration,
       );
@@ -274,7 +268,7 @@ class ExpandableSliverListController<T>
       _itemPeriod,
       (timer) {
         if (_numItemsDisplayed < _items.length) {
-          _listKey.currentState.insertItem(
+          listKey.currentState?.insertItem(
             _numItemsDisplayed++,
             duration: _itemPeriod,
           );
@@ -296,12 +290,12 @@ class ExpandableSliverListController<T>
           _numItemsDisplayed -= 1;
           T item = _items[_numItemsDisplayed];
 
-          _listKey.currentState.removeItem(
+          listKey.currentState?.removeItem(
             _numItemsDisplayed,
             (context, animation) {
               return SizeTransition(
                 sizeFactor: animation,
-                child: _builder(context, item, _numItemsDisplayed),
+                child: _builder?.call(context, item, _numItemsDisplayed),
               );
             },
             duration: _itemPeriod,

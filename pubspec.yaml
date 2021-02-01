@@ -1,12 +1,12 @@
 name: expandable_sliver_list
 description: A sliver List that you can then either expand or collapse, in order to show or hide the contents of the list.
-version: 3.0.0+1
+version: 4.0.0-nullsafety.0
 homepage: https://github.com/TNorbury/flutter_expandable_sliver_list
 repository: https://github.com/TNorbury/flutter_expandable_sliver_list
 issue_tracker: https://github.com/TNorbury/flutter_expandable_sliver_list/issues
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=1.12.0 <2.0.0"
 
 dependencies:
@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  effective_dart: ^1.2.0
+  effective_dart: ^1.3.0-nullsafety
   flutter_test:
     sdk: flutter
 

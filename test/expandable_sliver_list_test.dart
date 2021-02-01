@@ -275,13 +275,10 @@ void main() {
         ExpandableSliverListController expandableSliverListController =
             ExpandableSliverListController();
 
-        final GlobalKey<SliverAnimatedListState> _listKey =
-            GlobalKey<SliverAnimatedListState>();
         // start off expanded
         expandableSliverListController.init(
           initialState: ExpandableSliverListStatus.expanded,
           items: [],
-          listKey: _listKey,
           builder: (BuildContext context, item, index) {
             return Container();
           },
@@ -314,49 +311,6 @@ void main() {
     );
 
     test(
-      "Verify asserts work on controller",
-      () {
-        final ExpandableSliverListController<int> controller =
-            ExpandableSliverListController();
-
-        // Throw an exception when the following aren't passed:
-        // initial state
-        expect(() => controller.init(), throwsAssertionError);
-
-        // items
-        expect(
-            () => controller.init(
-                initialState: ExpandableSliverListStatus.collapsed),
-            throwsAssertionError);
-
-        // listKey
-        expect(
-            () => controller.init(
-                initialState: ExpandableSliverListStatus.collapsed, items: []),
-            throwsAssertionError);
-
-        // builder
-        GlobalKey<SliverAnimatedListState> listKey =
-            GlobalKey<SliverAnimatedListState>();
-        expect(
-            () => controller.init(
-                initialState: ExpandableSliverListStatus.collapsed,
-                items: [],
-                listKey: listKey),
-            throwsAssertionError);
-
-        //duration
-        expect(
-            () => controller.init(
-                  initialState: ExpandableSliverListStatus.collapsed,
-                  items: [],
-                  listKey: listKey,
-                  builder: (context, item, index) => Container(),
-                ),
-            throwsAssertionError);
-      },
-    );
-    test(
       "disposing the controller works and prevents new listeners from being added",
       () {
         final ExpandableSliverListController<int> controller =
@@ -375,7 +329,6 @@ void main() {
         controller.init(
             initialState: ExpandableSliverListStatus.expanded,
             items: [],
-            listKey: GlobalKey<SliverAnimatedListState>(),
             builder: (a, b, c) => Container(),
             duration: Duration(seconds: 0));
 
@@ -398,7 +351,7 @@ void main() {
 class MyApp extends StatelessWidget {
   final bool startCollapsed;
 
-  MyApp({@required this.startCollapsed});
+  MyApp({required this.startCollapsed});
 
   // This widget is the root of your application.
   @override
@@ -413,7 +366,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   final bool startCollapsed;
-  MyHomePage({@required this.startCollapsed});
+  MyHomePage({required this.startCollapsed});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();

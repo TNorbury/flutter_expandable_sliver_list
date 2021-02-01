@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'expandable_sliver_list_controller.dart';
 
+/// Builder for creating items in the list
 typedef ExpandableItemBuilder<T> = Widget Function(
     BuildContext context, T item, int index);
 
@@ -34,14 +35,14 @@ class ExpandableSliverList<T> extends StatefulWidget {
 
   /// items, build, and controller must be provided
   ExpandableSliverList({
-    Key key,
-    @required Iterable<T> initialItems,
-    @required this.builder,
-    @required this.controller,
+    Key? key,
+    required Iterable<T> initialItems,
+    required this.builder,
+    required this.controller,
     this.startCollapsed = false,
     this.duration = kDefaultDuration,
     this.expandOnInitialInsertion = false,
-  })  : initialItems = List<T>.from(initialItems ?? []),
+  })  : initialItems = List<T>.from(initialItems),
         super(key: key);
 
   @override
@@ -50,9 +51,6 @@ class ExpandableSliverList<T> extends StatefulWidget {
 }
 
 class _ExpandableSliverListState<T> extends State<ExpandableSliverList<T>> {
-  final GlobalKey<SliverAnimatedListState> _listKey =
-      GlobalKey<SliverAnimatedListState>();
-
   @override
   void initState() {
     super.initState();
@@ -70,7 +68,6 @@ class _ExpandableSliverListState<T> extends State<ExpandableSliverList<T>> {
     widget.controller.init(
       initialState: initialStatus,
       items: widget.initialItems,
-      listKey: _listKey,
       duration: widget.duration,
       builder: widget.builder,
       expandOnInitialInsertion: widget.expandOnInitialInsertion,
@@ -80,7 +77,7 @@ class _ExpandableSliverListState<T> extends State<ExpandableSliverList<T>> {
   @override
   Widget build(BuildContext context) {
     return SliverAnimatedList(
-      key: _listKey,
+      key: widget.controller.listKey,
       initialItemCount: widget.controller.numItemsDisplayed(),
       itemBuilder: (
         BuildContext context,
