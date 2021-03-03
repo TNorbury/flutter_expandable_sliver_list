@@ -1,5 +1,11 @@
 {
     "cSpell.words": [
         "nums"
-    ]
+    ],
+    "dart.flutterSdkPaths": [
+        ".fvm/flutter_sdk"
+    ],
+    "search.exclude": {
+        "**/.fvm": true
+    },
 }
