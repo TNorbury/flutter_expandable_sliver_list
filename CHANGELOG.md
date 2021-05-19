@@ -4,8 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-## [4.0.0] - 2021-03-03
+## 4.0.0+1 - 2021-05-19
+### Changed
+- package upgrade
+
+## 4.0.0 - 2021-03-03
 ### Changed
 - release nullsafety
 
@@ -59,6 +62,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 -   Initial release for the ExpandableSliverList
 -   Create flutter test automation and code coverage
-
-[Unreleased]: 
-[4.0.0]:
