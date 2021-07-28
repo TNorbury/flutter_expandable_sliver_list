@@ -121,7 +121,6 @@ void main() {
                 ExpandableSliverList<int>(
                   initialItems: _items,
                   controller: controller,
-                  startCollapsed: true,
                   builder: (context, item, index) {
                     return ListTile(
                       title: Text(item.toString()),
@@ -179,7 +178,6 @@ void main() {
                   initialItems: _items,
                   controller: controller,
                   duration: const Duration(seconds: 1),
-                  startCollapsed: true,
                   expandOnInitialInsertion: true,
                   builder: (context, item, index) {
                     return ListTile(
@@ -277,7 +275,6 @@ void main() {
 
         // start off expanded
         expandableSliverListController.init(
-          initialState: ExpandableSliverListStatus.expanded,
           items: [],
           builder: (BuildContext context, item, index) {
             return Container();
@@ -327,7 +324,6 @@ void main() {
             ExpandableSliverListController<int>();
 
         controller.init(
-            initialState: ExpandableSliverListStatus.expanded,
             items: [],
             builder: (a, b, c) => Container(),
             duration: Duration(seconds: 0));
@@ -375,8 +371,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<String> _items = ["Hello", "This", "List", "Expands"];
 
-  final ExpandableSliverListController<String> _expandableSliverListController =
-      ExpandableSliverListController();
+  late ExpandableSliverListController<String> _expandableSliverListController;
+
+  @override
+  void initState() {
+    _expandableSliverListController =
+        ExpandableSliverListController(initialStatus: widget.startCollapsed ? ExpandableSliverListStatus.collapsed : ExpandableSliverListStatus.expanded);
+    super.initState();
+
+  }
 
   void _toggleList() {
     if (_expandableSliverListController.isCollapsed()) {
@@ -393,7 +396,6 @@ class _MyHomePageState extends State<MyHomePage> {
         slivers: [
           ExpandableSliverList<String>(
             initialItems: _items,
-            startCollapsed: widget.startCollapsed,
             controller: _expandableSliverListController,
             duration: const Duration(seconds: 1),
             builder: (context, item, index) {
