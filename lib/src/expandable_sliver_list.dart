@@ -20,10 +20,6 @@ class ExpandableSliverList<T> extends StatefulWidget {
   /// Builder function that will be called on every item
   final ExpandableItemBuilder<T> builder;
 
-  /// If set to true, this list will start collapsed, and will need to be
-  /// expanded before any of the contents can be shown.
-  final bool startCollapsed;
-
   /// The controller that will operate this animated list
   final ExpandableSliverListController<T> controller;
 
@@ -39,7 +35,6 @@ class ExpandableSliverList<T> extends StatefulWidget {
     required Iterable<T> initialItems,
     required this.builder,
     required this.controller,
-    this.startCollapsed = false,
     this.duration = kDefaultDuration,
     this.expandOnInitialInsertion = false,
   })  : initialItems = List<T>.from(initialItems),
@@ -55,18 +50,7 @@ class _ExpandableSliverListState<T> extends State<ExpandableSliverList<T>> {
   void initState() {
     super.initState();
 
-    ExpandableSliverListStatus initialStatus = widget.startCollapsed
-        ? ExpandableSliverListStatus.collapsed
-        : ExpandableSliverListStatus.expanded;
-
-    if (widget.startCollapsed) {
-      initialStatus = ExpandableSliverListStatus.collapsed;
-    } else {
-      initialStatus = ExpandableSliverListStatus.expanded;
-    }
-
     widget.controller.init(
-      initialState: initialStatus,
       items: widget.initialItems,
       duration: widget.duration,
       builder: widget.builder,

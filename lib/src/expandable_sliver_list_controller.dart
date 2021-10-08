@@ -38,19 +38,19 @@ class ExpandableSliverListController<T>
   bool _initialized = false;
 
   /// Controller that'll be used to switch the list between collapsed and
-  /// expanded
-  ExpandableSliverListController()
-      : super(ExpandableSliverListStatus.collapsed);
+  /// expanded.
+  ExpandableSliverListController(
+      {ExpandableSliverListStatus initialStatus =
+          ExpandableSliverListStatus.expanded})
+      : super(initialStatus);
 
   /// Initializer to be called by the expandable list this is assigned to
   void init({
-    required ExpandableSliverListStatus initialState,
     required List<T> items,
     required ExpandableItemBuilder<T> builder,
     required Duration duration,
     bool expandOnInitialInsertion = false,
   }) {
-    value = initialState;
     _items = items;
     _builder = builder;
     _duration = duration;
