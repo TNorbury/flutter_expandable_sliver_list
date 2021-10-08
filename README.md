@@ -16,10 +16,15 @@ A Flutter widget which creates a Sliver List that you can then either expand or 
 
 In your Flutter project, add the package to your dependencies
 
+`flutter pub add expandable_sliver_list`
+
+or
+
 ```yml
 dependencies:
   ...
-  expandable_sliver_list: ^4.0.0
+  expandable_sliver_list: ^4.1.0
+  ...
 ```
 
 ### Usage Example
