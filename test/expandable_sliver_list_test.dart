@@ -341,6 +341,106 @@ void main() {
         expect(controller.numItemsDisplayed(), 0);
       },
     );
+
+    test(
+      "Set initial state in controller",
+      () {
+        ExpandableSliverListController<int> controller =
+            ExpandableSliverListController<int>(
+                initialStatus: ExpandableSliverListStatus.collapsed);
+
+        expect(controller.value, ExpandableSliverListStatus.collapsed);
+
+        controller.init(
+            items: [],
+            builder: (a, b, c) => Container(),
+            duration: Duration(seconds: 0));
+        expect(controller.value, ExpandableSliverListStatus.collapsed);
+
+        controller = ExpandableSliverListController<int>(
+            initialStatus: ExpandableSliverListStatus.expanded);
+
+        expect(controller.value, ExpandableSliverListStatus.expanded);
+
+        controller.init(
+            items: [],
+            builder: (a, b, c) => Container(),
+            duration: Duration(seconds: 0));
+        expect(controller.value, ExpandableSliverListStatus.expanded);
+      },
+    );
+  });
+
+  group("Verify deprecated argument still functions", () {
+    testWidgets(
+      "deprecated argument will override new controller argument. Expanded vs collapsed",
+      (WidgetTester tester) async {
+        ExpandableSliverListController<int> controller =
+            ExpandableSliverListController(
+          initialStatus: ExpandableSliverListStatus.expanded,
+        );
+
+        List<int> _items = [];
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CustomScrollView(
+                slivers: [
+                  ExpandableSliverList<int>(
+                    initialItems: _items,
+                    controller: controller,
+                    startCollapsed: true,
+                    duration: const Duration(milliseconds: 250),
+                    builder: (context, item, index) {
+                      return ListTile(
+                        title: Text(item.toString()),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        expect(controller.value, ExpandableSliverListStatus.collapsed);
+      },
+    );
+
+    testWidgets(
+      "deprecated argument will override new controller argument. Collapsed vs expanded",
+      (WidgetTester tester) async {
+        ExpandableSliverListController<int> controller =
+            ExpandableSliverListController(
+          initialStatus: ExpandableSliverListStatus.collapsed,
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CustomScrollView(
+                slivers: [
+                  ExpandableSliverList<int>(
+                    initialItems: [],
+                    controller: controller,
+                    startCollapsed: false,
+                    duration: const Duration(milliseconds: 250),
+                    builder: (context, item, index) {
+                      return ListTile(
+                        title: Text(item.toString()),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        expect(controller.value, ExpandableSliverListStatus.expanded);
+      },
+    );
   });
 }
 
@@ -375,10 +475,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    _expandableSliverListController =
-        ExpandableSliverListController(initialStatus: widget.startCollapsed ? ExpandableSliverListStatus.collapsed : ExpandableSliverListStatus.expanded);
+    _expandableSliverListController = ExpandableSliverListController(
+        initialStatus: widget.startCollapsed
+            ? ExpandableSliverListStatus.collapsed
+            : ExpandableSliverListStatus.expanded);
     super.initState();
-
   }
 
   void _toggleList() {
