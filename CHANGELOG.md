@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.1.1 - 2022-08-23
+### Changed
+- Flutter 3 support
+- Use Flutter Lints for analysis
+
 ## 4.1.0 - 2021-10-08
 ### Deprecated
 - startCollapsed in the constructor is now deprecated and will be removed. Use the initialState argument in the ExpandableSliverListController constructor instead. Thanks to [@splangi](https://github.com/splangi)

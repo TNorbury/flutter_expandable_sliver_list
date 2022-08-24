@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/expandable_sliver_list.svg)](https://pub.dev/packages/expandable_sliver_list)
 [![flutter_tests](https://github.com/TNorbury/flutter_expandable_sliver_list/workflows/flutter%20tests/badge.svg)](https://github.com/TNorbury/flutter_expandable_sliver_list/actions?query=workflow%3A%22flutter+tests%22)
 [![codecov](https://codecov.io/gh/TNorbury/flutter_expandable_sliver_list/branch/master/graph/badge.svg)](https://codecov.io/gh/TNorbury/flutter_expandable_sliver_list)
-[![style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://pub.dev/packages/effective_dart)
+[![style: flutter lints](https://img.shields.io/badge/style-flutter__lints-blue)](https://pub.dev/packages/flutter_lints)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A Flutter widget which creates a Sliver List that you can then either expand or collapse, in order to show or hide the contents of the list.

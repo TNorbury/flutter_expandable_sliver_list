@@ -28,7 +28,7 @@ class ExpandableSliverListController<T>
   int _numItemsDisplayed = 0;
 
   /// The period between each item being added/removed (visually) from the list
-  Duration _itemPeriod = Duration();
+  Duration _itemPeriod = const Duration();
 
   ExpandableItemBuilder<T>? _builder;
 
@@ -77,7 +77,7 @@ class ExpandableSliverListController<T>
 
   /// Calculate the animation time for a single item.
   void _calcItemPeriod() {
-    if (_items.length != 0) {
+    if (_items.isNotEmpty) {
       _itemPeriod = Duration(
           microseconds: (_duration.inMicroseconds / _items.length).round());
     }
@@ -113,7 +113,7 @@ class ExpandableSliverListController<T>
           for (int i = 0; i < numItemsToAdd; i++) {
             // index doesn't matter, as we just want the state's internal list
             // count to change
-            listKey.currentState?.insertItem(0, duration: Duration(seconds: 0));
+            listKey.currentState?.insertItem(0, duration: const Duration(seconds: 0));
           }
         }
 
@@ -125,7 +125,7 @@ class ExpandableSliverListController<T>
             listKey.currentState?.removeItem(
               0,
               (context, animation) => Container(),
-              duration: Duration(seconds: 0),
+              duration: const Duration(seconds: 0),
             );
           }
         }
@@ -206,7 +206,7 @@ class ExpandableSliverListController<T>
 
     // If this is our initial insertion, and we're expanding on that, then we'll
     // put ourselves into the expanded state
-    if (_expandOnInitialInsertion && _items.length == 0) {
+    if (_expandOnInitialInsertion && _items.isEmpty) {
       value = ExpandableSliverListStatus.expanded;
     }
 
@@ -217,7 +217,7 @@ class ExpandableSliverListController<T>
     _timer = Timer.periodic(
       period,
       (timer) {
-        if (items.length != 0 && indices.length != 0) {
+        if (items.isNotEmpty && indices.isNotEmpty) {
           T item = items.removeAt(0);
           int index = indices.removeAt(0);
 
